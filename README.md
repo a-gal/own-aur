@@ -9,7 +9,7 @@ Use at your own risk.
 ## Usage
 Put
 ```toml
-[own-aur]                                                                                                                                                         
+[own-aur]
 Url = https://github.com/a-gal/own-aur.git
 ```
 into your `~/.config/paru/paru.conf` and run
