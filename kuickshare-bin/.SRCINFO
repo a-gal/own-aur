@@ -1,0 +1,18 @@
+pkgbase = kuickshare-bin
+	pkgdesc = Quick Share client for KDE Plasma (prebuilt binary)
+	pkgver = 1.6.0
+	pkgrel = 1
+	url = https://github.com/the-beper/KuickShare
+	arch = x86_64
+	license = GPL3
+	depends = kirigami
+	depends = kirigami-addons
+	depends = qt6-declarative
+	provides = kuickshare
+	provides = kuickshared
+	conflicts = kuickshare
+	conflicts = kuickshared
+	source = KuickShare-x86_64-1.6.0.tar.gz::https://github.com/the-beper/KuickShare/releases/download/v1.6.0/KuickShare-x86_64.tar.gz
+	sha256sums = fc17fd4f4abf8de920ea8b9c55fc79a581aa94fd24b1e0b6fa0f033eb4bdd068
+
+pkgname = kuickshare-bin

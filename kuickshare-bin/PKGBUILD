@@ -1,0 +1,35 @@
+# Maintainer: Al galaktionov8 at gmail dot com
+pkgname=kuickshare-bin
+pkgver=1.6.0
+pkgrel=1
+pkgdesc="Quick Share client for KDE Plasma (prebuilt binary)"
+arch=('x86_64')
+url="https://github.com/the-beper/KuickShare"
+license=('GPL3')
+depends=('kirigami' 'kirigami-addons' 'qt6-declarative')
+provides=('kuickshare' 'kuickshared')
+conflicts=('kuickshare' 'kuickshared')
+source=(
+  "KuickShare-x86_64-${pkgver}.tar.gz::https://github.com/the-beper/KuickShare/releases/download/v${pkgver}/KuickShare-x86_64.tar.gz"
+)
+sha256sums=('fc17fd4f4abf8de920ea8b9c55fc79a581aa94fd24b1e0b6fa0f033eb4bdd068')
+
+package() {
+  srcroot="$srcdir/KuickShare-1.6.0-x86_64/usr/share/kuickshare"
+  sharedir="$pkgdir/usr/share"
+
+  install -Dm755 "$srcroot/host/bin/kuickshare" "$pkgdir/usr/bin/kuickshare"
+  install -Dm755 "$srcroot/host/bin/kuickshared" "$pkgdir/usr/bin/kuickshared"
+
+  install -Dm644 "$srcroot/io.github.the_beper.KuickShare.desktop" "$sharedir/applications/io.github.the_beper.KuickShare.desktop"
+
+  install -Dm644 "$srcroot/icons/io.github.the_beper.KuickShare.svg" "$sharedir/icons/hicolor/scalable/apps/io.github.the_beper.KuickShare.svg"
+  install -Dm644 "$srcroot/icons/io.github.the_beper.KuickShare-symbolic.svg" "$sharedir/icons/hicolor/symbolic/apps/io.github.the_beper.KuickShare-symbolic.svg"
+
+  install -Dm644 "$srcroot/kuickshare.notifyrc" "$sharedir/knotifications6/kuickshare.notifyrc"
+  install -Dm644 "$srcroot/io.github.the_beper.KuickShare.metainfo.xml" "$sharedir/metainfo/io.github.the_beper.KuickShare.metainfo.xml"
+
+  install -d "$sharedir/locale"
+  cp -a "$srcroot/locale/." "$sharedir/locale/"
+  find "$sharedir/locale" -type f -exec chmod 644 {} \;
+}
