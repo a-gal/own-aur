@@ -1,7 +1,7 @@
 pkgbase = kuickshare-bin
 	pkgdesc = Quick Share client for KDE Plasma (prebuilt binary)
 	pkgver = 1.6.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/the-beper/KuickShare
 	arch = x86_64
 	license = GPL3
