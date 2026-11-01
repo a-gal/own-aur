@@ -1,6 +1,6 @@
 # Maintainer: Al galaktionov8 at gmail dot com
 pkgname=kuickshare-bin
-pkgver=1.6.0
+pkgver=1.6.1
 pkgrel=1
 pkgdesc="Quick Share client for KDE Plasma (prebuilt binary)"
 arch=('x86_64')
@@ -12,7 +12,7 @@ conflicts=('kuickshare' 'kuickshared')
 source=(
   "KuickShare-x86_64-${pkgver}.tar.gz::https://github.com/the-beper/KuickShare/releases/download/v${pkgver}/KuickShare-x86_64.tar.gz"
 )
-sha256sums=('fc17fd4f4abf8de920ea8b9c55fc79a581aa94fd24b1e0b6fa0f033eb4bdd068')
+sha256sums=('552b14cf1cd2143d92b14e6a432090550a8683a717f95103fdb100e4676ef905')
 
 package() {
   srcroot="$srcdir/KuickShare-1.6.0-x86_64/usr/share/kuickshare"
