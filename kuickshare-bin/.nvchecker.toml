@@ -1,0 +1,4 @@
+[kuickshare-bin]
+source = "git"
+git = "https://github.com/the-beper/KuickShare.git"
+prefix = "v"
