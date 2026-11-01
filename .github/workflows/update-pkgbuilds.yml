@@ -75,7 +75,7 @@ jobs:
 
           runuser -u builder -- env HOME=/home/builder bash -c '
             set -euo pipefail
-            trap ''echo "::error::line $LINENO: \"$BASH_COMMAND\" exited $?"'' ERR
+            echo "entered builder block"
             cd "$1"
             pkgctl version upgrade
             makepkg --printsrcinfo > .SRCINFO
