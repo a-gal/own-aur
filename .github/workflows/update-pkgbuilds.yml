@@ -78,6 +78,8 @@ jobs:
             echo "entered builder block"
             cd "$1"
             echo "CDd"
+            ls -la
+            pkgctl version check
             pkgctl version upgrade 2>&1
             echo "upgraded"
             makepkg --printsrcinfo > .SRCINFO
