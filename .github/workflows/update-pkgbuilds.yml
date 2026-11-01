@@ -65,6 +65,7 @@ jobs:
         id: update
         env:
           PKG_DIR: ${{ matrix.package }}
+          TERM: xterm-256color
         run: |
           set -euo pipefail
           trap 'echo "::error::line $LINENO: \"$BASH_COMMAND\" exited $?"' ERR
@@ -80,7 +81,7 @@ jobs:
             echo "CDd"
             ls -la
             pkgctl version check --format json
-            pkgctl version upgrade -v --no-update-checksums
+            pkgctl version upgrade
             echo "upgraded"
             makepkg --printsrcinfo > .SRCINFO
             echo "makepackaged"
