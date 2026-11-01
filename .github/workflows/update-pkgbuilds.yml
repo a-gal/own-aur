@@ -67,6 +67,9 @@ jobs:
           PKG_DIR: ${{ matrix.package }}
         run: |
           set -euo pipefail
+          trap 'echo "::error::line $LINENO: \"$BASH_COMMAND\" exited $?"' ERR
+
+          git config --system --add safe.directory '*'
 
           chown -R builder:builder "$PKG_DIR"
 
