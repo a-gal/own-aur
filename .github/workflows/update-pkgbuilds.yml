@@ -65,6 +65,7 @@ jobs:
         id: update
         env:
           PKG_DIR: ${{ matrix.package }}
+          # pkgctl version upgrade FUCKING DIES without it
           TERM: xterm-256color
         run: |
           set -euo pipefail
@@ -76,15 +77,9 @@ jobs:
 
           runuser -u builder -- env HOME=/home/builder bash -c '
             set -euo pipefail
-            echo "entered builder block"
             cd "$1"
-            echo "CDd"
-            ls -la
-            pkgctl version check --format json
             pkgctl version upgrade
-            echo "upgraded"
             makepkg --printsrcinfo > .SRCINFO
-            echo "makepackaged"
           ' _ "$GITHUB_WORKSPACE/$PKG_DIR"
 
           name="$(awk '$1 == "pkgbase" {print $3; exit}' "$PKG_DIR/.SRCINFO")"
