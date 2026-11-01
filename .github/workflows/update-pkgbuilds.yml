@@ -80,7 +80,7 @@ jobs:
             echo "CDd"
             ls -la
             pkgctl version check --format json
-            pkgctl version upgrade -v
+            pkgctl version upgrade -v --no-update-checksums
             echo "upgraded"
             makepkg --printsrcinfo > .SRCINFO
             echo "makepackaged"
