@@ -1,0 +1,100 @@
+name: Update Arch packages
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: update-arch-packages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      packages: ${{ steps.matrix.outputs.packages }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Discover packages
+        id: matrix
+        shell: bash
+        run: |
+          shopt -s nullglob
+          packages="$(
+            for f in */PKGBUILD; do
+              dir="${f%/PKGBUILD}"
+              [[ -f "$dir/.nvchecker.toml" ]] && printf '%s\n' "$dir"
+            done | jq -Rnc '[inputs]'
+          )"
+          echo "packages=$packages" >> "$GITHUB_OUTPUT"
+
+  update:
+    name: update (${{ matrix.package }})
+    needs: discover
+    if: needs.discover.outputs.packages != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+    container:
+      image: archlinux:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.discover.outputs.packages) }}
+
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm --needed \
+            devtools base-devel git nvchecker pacman-contrib util-linux
+          useradd --create-home builder
+
+      - uses: actions/checkout@v7
+
+      - name: Update package
+        id: update
+        env:
+          PKG_DIR: ${{ matrix.package }}
+        run: |
+          set -euo pipefail
+
+          chown -R builder:builder "$PKG_DIR"
+
+          runuser -u builder -- env HOME=/home/builder bash -c '
+            set -euo pipefail
+            cd "$1"
+            pkgctl version upgrade
+            makepkg --printsrcinfo > .SRCINFO
+          ' _ "$GITHUB_WORKSPACE/$PKG_DIR"
+
+          name="$(sed -n 's/^pkgbase = //{p;q}' "$PKG_DIR/.SRCINFO")"
+          version="$(sed -n 's/^[[:space:]]*pkgver = //{p;q}' "$PKG_DIR/.SRCINFO")"
+          [[ -n $name && -n $version ]] || { echo "could not read name/version from .SRCINFO" >&2; exit 1; }
+
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: automation/update-${{ steps.update.outputs.name }}
+          delete-branch: true
+          add-paths: |
+            ${{ matrix.package }}/PKGBUILD
+            ${{ matrix.package }}/.SRCINFO
+          title: "chore(${{ steps.update.outputs.name }}): update to ${{ steps.update.outputs.version }}"
+          commit-message: "chore(${{ steps.update.outputs.name }}): update to ${{ steps.update.outputs.version }}"
+          body: |
+            Automated upstream version update (nvchecker + pkgctl).
+
+            Please review the PKGBUILD changes before merging.
