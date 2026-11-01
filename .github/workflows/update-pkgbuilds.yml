@@ -77,8 +77,8 @@ jobs:
             makepkg --printsrcinfo > .SRCINFO
           ' _ "$GITHUB_WORKSPACE/$PKG_DIR"
 
-          name="$(sed -n 's/^pkgbase = //{p;q}' "$PKG_DIR/.SRCINFO")"
-          version="$(sed -n 's/^[[:space:]]*pkgver = //{p;q}' "$PKG_DIR/.SRCINFO")"
+          name="$(awk '$1 == "pkgbase" {print $3; exit}' "$PKG_DIR/.SRCINFO")"
+          version="$(awk '$1 == "pkgver" {print $3; exit}' "$PKG_DIR/.SRCINFO")"
           [[ -n $name && -n $version ]] || { echo "could not read name/version from .SRCINFO" >&2; exit 1; }
 
           echo "name=$name" >> "$GITHUB_OUTPUT"
