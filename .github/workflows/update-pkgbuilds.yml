@@ -68,11 +68,10 @@ jobs:
         run: |
           set -euo pipefail
           trap 'echo "::error::line $LINENO: \"$BASH_COMMAND\" exited $?"' ERR
-          
-          work=/home/builder/work
-          install -d -o builder -g builder "$work"
-          cp -a "$PKG_DIR/." "$work/"
-          chown -R builder:builder "$work"
+
+          git config --system --add safe.directory '*'
+
+          chown -R builder:builder "$PKG_DIR"
 
           runuser -u builder -- env HOME=/home/builder bash -c '
             set -euo pipefail
@@ -83,9 +82,7 @@ jobs:
             echo "upgraded"
             makepkg --printsrcinfo > .SRCINFO
             echo "makepackaged"
-          ' _ "$work"
-
-          cp "$work/PKGBUILD" "$work/.SRCINFO" "$PKG_DIR/"
+          ' _ "$GITHUB_WORKSPACE/$PKG_DIR"
 
           name="$(awk '$1 == "pkgbase" {print $3; exit}' "$PKG_DIR/.SRCINFO")"
           version="$(awk '$1 == "pkgver" {print $3; exit}' "$PKG_DIR/.SRCINFO")"
