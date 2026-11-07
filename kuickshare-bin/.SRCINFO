@@ -1,6 +1,6 @@
 pkgbase = kuickshare-bin
 	pkgdesc = Quick Share client for KDE Plasma (prebuilt binary)
-	pkgver = 1.7.2
+	pkgver = 1.8.0
 	pkgrel = 1
 	url = https://github.com/the-beper/KuickShare
 	arch = x86_64
@@ -12,7 +12,7 @@ pkgbase = kuickshare-bin
 	provides = kuickshared
 	conflicts = kuickshare
 	conflicts = kuickshared
-	source = KuickShare-x86_64-1.7.2.tar.gz::https://github.com/the-beper/KuickShare/releases/download/v1.7.2/KuickShare-x86_64.tar.gz
-	sha256sums = 859d5650e9440f1ee019f704789952e1983ea4df4bfb64b99c6d89be4ef0e74e
+	source = KuickShare-x86_64-1.8.0.tar.gz::https://github.com/the-beper/KuickShare/releases/download/v1.8.0/KuickShare-x86_64.tar.gz
+	sha256sums = 01bb8667f7b029ee5461de767dd79d2714238fa937777dbaca3be1a9c53c103d
 
 pkgname = kuickshare-bin
